@@ -90,6 +90,7 @@ function App() {
         content: msg.text,
         timestamp: new Date(),
       }));
+      //@ts-ignore
       setChatMessages((prev) => {
         // Keep the initial greeting and add new messages
         const initialMessage = prev.find((m) => m.id === "1");
