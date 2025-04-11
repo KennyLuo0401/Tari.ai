@@ -35,23 +35,23 @@ export function Header() {
           </motion.div>
           
           <div className="flex items-center space-x-4">
-            <motion.button 
+            {/* <motion.button 
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="relative p-2 text-zinc-400 hover:text-white transition-colors"
             >
               <span className="absolute top-1 right-1 h-2 w-2 bg-white rounded-full animate-pulse"></span>
               <Bell className="h-5 w-5" />
-            </motion.button>
+            </motion.button> */}
             
-            <motion.button 
+            {/* <motion.button 
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="flex items-center space-x-2 px-4 py-2 bg-zinc-800 text-white rounded-lg font-sans text-sm font-medium tracking-wide hover:bg-zinc-700 border border-zinc-700 hover:border-zinc-600 transition-all duration-200"
             >
               <LogIn className="h-4 w-4" />
               <span>Connect Wallet</span>
-            </motion.button>
+            </motion.button> */}
           </div>
         </div>
       </div>
