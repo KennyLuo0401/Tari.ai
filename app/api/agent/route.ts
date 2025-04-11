@@ -23,7 +23,12 @@ import { generatePrivateKey, privateKeyToAccount } from "viem/accounts";
 import fs from "fs";
 import { helloWorldActionProvider } from "@/app/yieldfinder/yieldfinderProvider";
 import { westend } from "@/app/chain/westend";
-import { moonbeam, moonbeamDev, moonbaseAlpha } from "viem/chains";
+import {
+  moonbeam,
+  moonbeamDev,
+  moonbaseAlpha,
+  rootstockTestnet,
+} from "viem/chains";
 
 /**
  * AgentKit Integration Route
@@ -112,7 +117,7 @@ async function getOrInitializeAgent(): Promise<
 
     const client = createWalletClient({
       account,
-      chain: moonbaseAlpha,
+      chain: rootstockTestnet,
       transport: http(),
     });
     const walletProvider = new ViemWalletProvider(client);
