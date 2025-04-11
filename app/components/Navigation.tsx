@@ -1,10 +1,10 @@
-import React from 'react';
-import { MessageSquare, Clock } from 'lucide-react';
-import { motion } from 'framer-motion';
+import React from "react";
+import { MessageSquare, Repeat } from "lucide-react";
+import { motion } from "framer-motion";
 
 interface NavigationProps {
-  activeTab: 'chat' | 'records';
-  onTabChange: (tab: 'chat' | 'records') => void;
+  activeTab: "chat" | "records";
+  onTabChange: (tab: "chat" | "records") => void;
 }
 
 export function Navigation({ activeTab, onTabChange }: NavigationProps) {
@@ -15,16 +15,18 @@ export function Navigation({ activeTab, onTabChange }: NavigationProps) {
           <motion.button
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            onClick={() => onTabChange('chat')}
+            onClick={() => onTabChange("chat")}
             className={`relative px-6 py-3 flex items-center space-x-3 text-base font-sans tracking-wide transition-all duration-200 ${
-              activeTab === 'chat'
-                ? 'text-white'
-                : 'text-zinc-400 hover:text-zinc-300'
+              activeTab === "chat"
+                ? "text-white"
+                : "text-zinc-400 hover:text-zinc-300"
             }`}
           >
             <MessageSquare className="h-4 w-4" />
-            <span className="text-xs font-medium tracking-wider uppercase">AI Assistant</span>
-            {activeTab === 'chat' && (
+            <span className="text-xs font-medium tracking-wider uppercase">
+              AI Assistant
+            </span>
+            {activeTab === "chat" && (
               <motion.div
                 layoutId="activeTab"
                 className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-white/60 via-white to-white/60"
@@ -36,16 +38,18 @@ export function Navigation({ activeTab, onTabChange }: NavigationProps) {
           <motion.button
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            onClick={() => onTabChange('records')}
+            onClick={() => onTabChange("records")}
             className={`relative px-6 py-3 flex items-center space-x-3 text-base font-sans tracking-wide transition-all duration-200 ${
-              activeTab === 'records'
-                ? 'text-white'
-                : 'text-zinc-400 hover:text-zinc-300'
+              activeTab === "records"
+                ? "text-white"
+                : "text-zinc-400 hover:text-zinc-300"
             }`}
           >
-            <Clock className="h-4 w-4" />
-            <span className="text-xs font-medium tracking-wider uppercase">Medical Records</span>
-            {activeTab === 'records' && (
+            <Repeat className="h-4 w-4" />
+            <span className="text-xs font-medium tracking-wider uppercase">
+              DCA Records
+            </span>
+            {activeTab === "records" && (
               <motion.div
                 layoutId="activeTab"
                 className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-white/60 via-white to-white/60"

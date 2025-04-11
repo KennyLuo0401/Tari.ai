@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import { Send, Bot, Upload, FileText, Image } from "lucide-react";
+import { Send, Bot, Upload, FileText, Image, Languages } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChatMessage } from "../types";
 
@@ -58,6 +58,10 @@ export function ChatInterface({
     }
   };
 
+  const handleTranslate = (message: string) => {
+    onSendMessage(`Translate the following text to Russian: "${message}"`);
+  };
+
   const formatTime = (date: Date) => {
     return new Date(date).toLocaleTimeString("en-US", {
       hour: "numeric",
@@ -108,7 +112,7 @@ export function ChatInterface({
               }`}
             >
               <div
-                className={`max-w-[80%] rounded-xl p-4 ${
+                className={`max-w-[80%] rounded-xl p-4 relative group ${
                   message.role === "user"
                     ? "bg-white text-black shadow-monochrome"
                     : "bg-zinc-800 text-white border border-zinc-700"
@@ -117,9 +121,24 @@ export function ChatInterface({
                 <p className="text-sm leading-relaxed font-body whitespace-pre-wrap">
                   {message.content}
                 </p>
-                <span className="text-xs tracking-wide mt-2 block opacity-75">
-                  {formatTime(message.timestamp)}
-                </span>
+                <div className="flex items-center justify-between mt-2">
+                  <span className="text-xs tracking-wide opacity-75">
+                    {formatTime(message.timestamp)}
+                  </span>
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => handleTranslate(message.content)}
+                    className={`opacity-0 group-hover:opacity-100 transition-opacity p-1 rounded ${
+                      message.role === "user"
+                        ? "hover:bg-gray-100"
+                        : "hover:bg-zinc-700"
+                    }`}
+                    title="Translate to Russian"
+                  >
+                    <Languages className="h-4 w-4" />
+                  </motion.button>
+                </div>
               </div>
             </motion.div>
           ))}

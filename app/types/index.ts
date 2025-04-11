@@ -1,9 +1,11 @@
-export interface HealthRecord {
+export interface DCARecord {
   id: string;
   date: string;
-  type: 'diagnosis' | 'medication' | 'allergy' | 'lab';
-  description: string;
-  severity?: 'low' | 'medium' | 'high';
+  type: "current" | "past" | "upcoming";
+  asset: string;
+  amount: number;
+  frequency: "daily" | "weekly" | "monthly";
+  status: "active" | "completed" | "scheduled";
   details?: {
     [key: string]: string | number | boolean;
   };
@@ -18,7 +20,7 @@ export interface ProcessingStatus {
 
 export interface ChatMessage {
   id: string;
-  role: 'user' | 'assistant';
+  role: "user" | "assistant";
   content: string;
   timestamp: Date;
 }
