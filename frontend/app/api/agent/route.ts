@@ -28,6 +28,7 @@ import {
   moonbeamDev,
   moonbaseAlpha,
   rootstockTestnet,
+  rootstock
 } from "viem/chains";
 
 /**
@@ -117,7 +118,7 @@ async function getOrInitializeAgent(): Promise<
 
     const client = createWalletClient({
       account,
-      chain: rootstockTestnet,
+      chain: rootstock,
       transport: http(),
     });
     const walletProvider = new ViemWalletProvider(client);

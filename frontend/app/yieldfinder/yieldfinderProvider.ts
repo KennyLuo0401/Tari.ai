@@ -11,8 +11,12 @@ import {
   CHAINS,
   Environment,
 } from "@axelar-network/axelarjs-sdk";
+import { createWalletClient, custom, http, parseAbi, PrivateKeyAccount } from "viem";
+import { privateKeyToAccount } from 'viem/accounts';
+import { createConfig, getAccount, getWalletClient } from "@wagmi/core";
 //import { ethers } from "ethers";
 import { encodeDeployData } from "viem";
+import { rootstock, rootstockTestnet } from "viem/chains";
 // Define a schema with a message field for "Hello World"
 export const HelloWorldActionSchema = z.object({
   message: z.string(), // Expecting a string message input
@@ -310,7 +314,7 @@ class HelloWorldActionProvider extends ActionProvider<WalletProvider> {
     schema: DeployTokenSchema,
   })
   async deployToken(
-    wallet: EvmWalletProvider,
+    // wallet: EvmWalletProvider,
     args: z.infer<typeof DeployTokenSchema>
   ): Promise<string> {
     try {
@@ -328,13 +332,29 @@ class HelloWorldActionProvider extends ActionProvider<WalletProvider> {
         //gas: 5_000_000n,                   // You can estimate this value or adjust it based on your needs
       };
 
+      const account = privateKeyToAccount(`0x${process.env.PRIVATE_KEY_TESTNET}`);
+
+      // const configA = createConfig({ 
+      //   chains: [rootstockTestnet], 
+      //   transports: { 
+      //     [rootstockTestnet.id]: http(), 
+      //   }, 
+      // })
+      const wallet = createWalletClient({
+        account,
+        chain: rootstockTestnet,
+        transport: http(),
+      });
+
+      if (!wallet) throw new Error("Wallet client not found");
+
       const txHash = await wallet.sendTransaction(transactionRequest);
 
       // Wait for the transaction receipt (to confirm deployment)
-      const receipt = await wallet.waitForTransactionReceipt(txHash);
+     // const receipt = await wallet.waitForTransactionReceipt(txHash);
 
       // Return the deployed contract address
-      return `Token deployed with address: ${receipt.contractAddress}`;
+      return `Token deployed with transaction hash: ${txHash}`;
     } catch (error) {
       return `Error deploying token: ${error}`;
     }
