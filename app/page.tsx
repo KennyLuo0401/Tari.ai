@@ -47,6 +47,7 @@ function App() {
         content: msg.text,
         timestamp: new Date(),
       }));
+      //@ts-ignore
       setChatMessages((prev) => {
         const initialMessage = prev.find((m) => m.id === "1");
         return initialMessage ? [initialMessage, ...newMessages] : newMessages;
