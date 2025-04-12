@@ -9,20 +9,20 @@ Tari.ai is a sophisticated DCA (Dollar-Cost Averaging) portfolio manager powered
 - 🔄 **Automated Execution**: Reliable automated DCA transactions on Rootstock
 - 💫 **Beautiful UI**: Modern, responsive interface with smooth animations
 - 🔒 **Secure**: Built with security-first practices for DeFi operations
+- 📄 **Document Processing**: Integrated Upstage document parsing for automated command extraction from documents
 
 ## Tech Stack
 
 ### Frontend
-
 - Next.js 14
 - TypeScript
 - Tailwind CSS
 - Framer Motion
 - AgentKit
 - Viem
+- Upstage Document Parser API
 
 ### Backend
-
 - Node.js
 - Express
 - Sushi SDK
@@ -37,18 +37,17 @@ Tari.ai is a sophisticated DCA (Dollar-Cost Averaging) portfolio manager powered
 - Yarn or npm
 - A Rootstock RPC URL
 - A wallet private key for DCA execution
+- Upstage API key for document processing
 
 ### Installation
 
 1. Clone the repository:
-
 ```bash
 git clone https://github.com/yourusername/tari-ai.git
 cd tari-ai
 ```
 
 2. Install dependencies for both frontend and backend:
-
 ```bash
 # Frontend
 npm install
@@ -61,17 +60,16 @@ npm install
 3. Create environment files:
 
 Frontend (.env):
-
 ```env
-NEXT_PUBLIC_BACKEND_URL=http://localhost:3000
+NEXT_PUBLIC_BACKEND_URL=http://localhost:5001
+UPSTAGE_API_KEY=your_upstage_api_key
 ```
 
 Backend (.env):
-
 ```env
 PRIVATE_KEY=your_private_key
 RPC_URL=your_rootstock_rpc_url
-PORT=3000
+PORT=5001
 AMOUNT_ETH=0.01
 SLIPPAGE=0.005
 ```
@@ -100,13 +98,22 @@ npm run dev
 ### Using the AI Assistant
 
 The AI assistant can help you with:
-
 - Analyzing market conditions
 - Optimizing DCA strategies
 - Understanding transaction history
 - Getting market insights
 
 Simply type your questions in the chat interface.
+
+### Document Processing
+
+The application supports document parsing through Upstage API integration:
+
+- Upload documents containing DCA instructions
+- Supports various formats (PDF, Images)
+- Automatically extracts and processes commands
+- Handles numbered (1., 2.), lettered (a., b.), and Roman numeral (I., II.) formats
+- Real-time progress tracking of document processing
 
 ## API Endpoints
 
@@ -147,3 +154,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Built with [AgentKit](https://github.com/coinbase/agentkit)
 - Powered by [Sushi SDK](https://github.com/sushiswap/sushi-sdk)
 - UI components inspired by [shadcn/ui](https://ui.shadcn.com/)
+- Document processing powered by [Upstage AI](https://upstage.ai)
