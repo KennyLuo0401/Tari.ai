@@ -24,7 +24,9 @@ export function useDCAStatus(pollInterval: number = 5000) {
       setIsLoading(true);
       setError(null);
       try {
-        const response = await fetch("http://localhost:5001/dca/status");
+        const response = await fetch(
+          "https://tari-pyuzwmauh-mxber2022s-projects.vercel.app/dca/status"
+        );
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
