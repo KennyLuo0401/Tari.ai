@@ -1,7 +1,15 @@
-"use client";
-
 import React, { useState, useRef, useEffect } from "react";
-import { Send, Bot, Upload, FileText, Image, Languages } from "lucide-react";
+import {
+  Send,
+  Bot,
+  Upload,
+  FileText,
+  Image,
+  Languages,
+  Bitcoin,
+  Clock,
+  Calendar,
+} from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChatMessage } from "../types";
 
@@ -45,6 +53,13 @@ export function ChatInterface({
     if (input.trim() && !isProcessing) {
       onSendMessage(input.trim());
       setInput("");
+    }
+  };
+
+  const handleQuickAction = (e: React.MouseEvent, message: string) => {
+    e.preventDefault(); // Prevent form submission
+    if (!isProcessing) {
+      onSendMessage(message);
     }
   };
 
@@ -150,69 +165,129 @@ export function ChatInterface({
         onSubmit={handleSubmit}
         className="p-4 border-t border-zinc-800 bg-zinc-900/80"
       >
-        <div className="flex space-x-2">
-          <div className="flex space-x-2">
-            <motion.label
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="flex-none group relative"
-              title="Upload Document (PDF, DOC)"
+        <div className="flex flex-col space-y-2">
+          <div className="grid grid-cols-2 gap-2">
+            <motion.button
+              type="button" // Important: Specify button type
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={(e) =>
+                handleQuickAction(e, "Start a daily DCA of $10 into Bitcoin")
+              }
+              disabled={isProcessing}
+              className="flex items-center justify-center space-x-2 px-4 py-2 bg-zinc-800 text-white rounded-lg hover:bg-zinc-700 transition-colors border border-zinc-700 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <input
-                type="file"
-                ref={documentFileInputRef}
-                onChange={handleFileChange}
-                accept=".pdf,.doc,.docx"
-                className="hidden"
-              />
-              <div className="w-10 h-10 flex items-center justify-center bg-zinc-800 text-zinc-300 rounded-lg hover:bg-zinc-700 hover:text-white cursor-pointer transition-all border border-zinc-700">
-                <FileText className="h-5 w-5" />
-              </div>
-              <span className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-zinc-800 text-xs text-white px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                Upload Document
-              </span>
-            </motion.label>
+              <Bitcoin className="h-4 w-4" />
+              <span className="text-sm">Daily BTC ($10)</span>
+            </motion.button>
 
-            <motion.label
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="flex-none group relative"
-              title="Upload Image (JPG, PNG)"
+            <motion.button
+              type="button" // Important: Specify button type
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={(e) =>
+                handleQuickAction(e, "Start a weekly DCA of $50 into Bitcoin")
+              }
+              disabled={isProcessing}
+              className="flex items-center justify-center space-x-2 px-4 py-2 bg-zinc-800 text-white rounded-lg hover:bg-zinc-700 transition-colors border border-zinc-700 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <input
-                type="file"
-                ref={imageFileInputRef}
-                onChange={handleFileChange}
-                accept=".jpg,.jpeg,.png"
-                className="hidden"
-              />
-              <div className="w-10 h-10 flex items-center justify-center bg-zinc-800 text-zinc-300 rounded-lg hover:bg-zinc-700 hover:text-white cursor-pointer transition-all border border-zinc-700">
-                <Image className="h-5 w-5" />
-              </div>
-              <span className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-zinc-800 text-xs text-white px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                Upload Image
-              </span>
-            </motion.label>
+              <Calendar className="h-4 w-4" />
+              <span className="text-sm">Weekly BTC ($50)</span>
+            </motion.button>
+
+            <motion.button
+              type="button" // Important: Specify button type
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={(e) =>
+                handleQuickAction(e, "Start a daily DCA of $25 into Bitcoin")
+              }
+              disabled={isProcessing}
+              className="flex items-center justify-center space-x-2 px-4 py-2 bg-zinc-800 text-white rounded-lg hover:bg-zinc-700 transition-colors border border-zinc-700 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <Clock className="h-4 w-4" />
+              <span className="text-sm">Daily BTC ($25)</span>
+            </motion.button>
+
+            <motion.button
+              type="button" // Important: Specify button type
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={(e) =>
+                handleQuickAction(e, "Start a monthly DCA of $100 into Bitcoin")
+              }
+              disabled={isProcessing}
+              className="flex items-center justify-center space-x-2 px-4 py-2 bg-zinc-800 text-white rounded-lg hover:bg-zinc-700 transition-colors border border-zinc-700 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <Calendar className="h-4 w-4" />
+              <span className="text-sm">Monthly BTC ($100)</span>
+            </motion.button>
           </div>
 
-          <input
-            type="text"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder="Ask about tactical rebalancing strategies..."
-            className="flex-1 px-4 py-2 bg-zinc-800 text-white placeholder-zinc-400 rounded-lg border border-zinc-700 focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-transparent transition-all font-body text-sm"
-            disabled={isProcessing}
-          />
+          <div className="flex space-x-2">
+            <div className="flex space-x-2">
+              <motion.label
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="flex-none group relative"
+                title="Upload Document (PDF, DOC)"
+              >
+                <input
+                  type="file"
+                  ref={documentFileInputRef}
+                  onChange={handleFileChange}
+                  accept=".pdf,.doc,.docx"
+                  className="hidden"
+                />
+                <div className="w-10 h-10 flex items-center justify-center bg-zinc-800 text-zinc-300 rounded-lg hover:bg-zinc-700 hover:text-white cursor-pointer transition-all border border-zinc-700">
+                  <FileText className="h-5 w-5" />
+                </div>
+                <span className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-zinc-800 text-xs text-white px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                  Upload Document
+                </span>
+              </motion.label>
 
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            type="submit"
-            disabled={isProcessing || !input.trim()}
-            className="w-10 h-10 flex items-center justify-center bg-white text-black rounded-lg hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-monochrome"
-          >
-            <Send className="h-5 w-5" />
-          </motion.button>
+              <motion.label
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="flex-none group relative"
+                title="Upload Image (JPG, PNG)"
+              >
+                <input
+                  type="file"
+                  ref={imageFileInputRef}
+                  onChange={handleFileChange}
+                  accept=".jpg,.jpeg,.png"
+                  className="hidden"
+                />
+                <div className="w-10 h-10 flex items-center justify-center bg-zinc-800 text-zinc-300 rounded-lg hover:bg-zinc-700 hover:text-white cursor-pointer transition-all border border-zinc-700">
+                  <Image className="h-5 w-5" />
+                </div>
+                <span className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-zinc-800 text-xs text-white px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                  Upload Image
+                </span>
+              </motion.label>
+            </div>
+
+            <input
+              type="text"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder="Ask about DCA strategies..."
+              className="flex-1 px-4 py-2 bg-zinc-800 text-white placeholder-zinc-400 rounded-lg border border-zinc-700 focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-transparent transition-all font-body text-sm"
+              disabled={isProcessing}
+            />
+
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              type="submit"
+              disabled={isProcessing || !input.trim()}
+              className="w-10 h-10 flex items-center justify-center bg-white text-black rounded-lg hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-monochrome"
+            >
+              <Send className="h-5 w-5" />
+            </motion.button>
+          </div>
         </div>
       </form>
     </div>
