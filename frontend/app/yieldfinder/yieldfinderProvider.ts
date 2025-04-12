@@ -172,9 +172,13 @@ class HelloWorldActionProvider extends ActionProvider<WalletProvider> {
       const token = normalizeTokenName(args.token);
       const intervalMs = parseIntervalToMs(args.interval);
 
-      if (intervalMs < 60000) {
-        throw new Error("Interval must be at least 1 minute.");
-      }
+      console.log("amount: ", amount);
+      console.log("token: ", token);
+      console.log("intervalMs: ", intervalMs);
+
+      // if (intervalMs < 60000) {
+      //   throw new Error("Interval must be at least 1 minute.");
+      // }
 
       const response = await fetch(
         "https://tari-pyuzwmauh-mxber2022s-projects.vercel.app/dca/start",
