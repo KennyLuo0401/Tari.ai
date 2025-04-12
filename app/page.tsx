@@ -1,6 +1,7 @@
 "use client";
 
 import { useAgent } from "./hooks/useAgent";
+import { useDCAStatus } from "./hooks/useDCAStatus";
 import React, { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { Header } from "./components/Header";
@@ -9,7 +10,7 @@ import { Footer } from "./components/Footer";
 import { ProcessingIndicator } from "./components/ProcessingIndicator";
 import { Timeline } from "./components/Timeline";
 import { ChatInterface } from "./components/ChatInterface";
-import { DCARecord, ProcessingStatus, ChatMessage } from "./types";
+import { ProcessingStatus, ChatMessage } from "./types";
 import { processDocument } from "./utils/upstageApi";
 
 function App() {
@@ -19,53 +20,10 @@ function App() {
     sendMessage: sendAgentMessage,
     isThinking,
   } = useAgent();
+  const { records, isLoading: isDCALoading, error: dcaError } = useDCAStatus();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<"chat" | "records">("chat");
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const [records, setRecords] = useState<DCARecord[]>([
-    {
-      id: "1",
-      type: "current",
-      asset: "BTC",
-      amount: 100,
-      frequency: "weekly",
-      status: "active",
-      date: "2024-03-20",
-      details: {
-        "Next DCA": "2024-03-27",
-        "Total Invested": "$1,200",
-        "Average Price": "$45,000",
-      },
-    },
-    {
-      id: "2",
-      type: "past",
-      asset: "ETH",
-      amount: 50,
-      frequency: "monthly",
-      status: "completed",
-      date: "2024-02-15",
-      details: {
-        "Total Invested": "$600",
-        "Average Price": "$2,800",
-        ROI: "+15%",
-      },
-    },
-    {
-      id: "3",
-      type: "upcoming",
-      asset: "SOL",
-      amount: 75,
-      frequency: "daily",
-      status: "scheduled",
-      date: "2024-03-25",
-      details: {
-        "Start Date": "2024-03-25",
-        Duration: "30 days",
-        "Total Amount": "$2,250",
-      },
-    },
-  ]);
 
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([
     {
@@ -81,7 +39,6 @@ function App() {
     isProcessing: false,
   });
 
-  // Update chat messages when agent messages change
   useEffect(() => {
     if (agentMessages.length > 0) {
       const newMessages = agentMessages.map((msg, index) => ({
@@ -90,14 +47,29 @@ function App() {
         content: msg.text,
         timestamp: new Date(),
       }));
-      //@ts-ignore
       setChatMessages((prev) => {
-        // Keep the initial greeting and add new messages
         const initialMessage = prev.find((m) => m.id === "1");
         return initialMessage ? [initialMessage, ...newMessages] : newMessages;
       });
     }
   }, [agentMessages]);
+
+  const processCommands = async (commands: string[]) => {
+    for (let i = 0; i < commands.length; i++) {
+      setProcessingStatus((prev) => ({
+        ...prev,
+        status: `Processing command ${i + 1} of ${commands.length}...`,
+        progress: (i / commands.length) * 100,
+      }));
+
+      await sendAgentMessage(commands[i]);
+
+      // Add a small delay between commands
+      if (i < commands.length - 1) {
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+      }
+    }
+  };
 
   const handleFileUpload = async (file: File) => {
     if (!file) return;
@@ -116,22 +88,22 @@ function App() {
       }));
 
       const result = await processDocument(file);
-
-      setProcessingStatus((prev) => ({
-        ...prev,
-        status: "Processing OCR results...",
-        progress: 60,
-      }));
-
       const formattedText = result.text.split("\\n").join("\n");
 
-      // Send the extracted text to the AI agent
-      await sendAgentMessage(`${formattedText}`);
+      // Split text into separate commands based on line breaks or other delimiters
+      const commands = formattedText
+        .split(/[.\n]/)
+        .map((cmd) => cmd.trim())
+        .filter((cmd) => cmd.length > 0);
+
+      if (commands.length > 0) {
+        await processCommands(commands);
+      }
 
       setProcessingStatus((prev) => ({
         ...prev,
-        status: "Completing analysis...",
-        progress: 90,
+        status: "Processing complete",
+        progress: 100,
       }));
     } catch (error) {
       console.error("Error processing document:", error);
@@ -144,7 +116,9 @@ function App() {
         progress: 100,
       }));
     } finally {
-      setProcessingStatus({ isProcessing: false });
+      setTimeout(() => {
+        setProcessingStatus({ isProcessing: false });
+      }, 1000);
     }
   };
 
@@ -157,9 +131,11 @@ function App() {
       <Header />
       <Navigation activeTab={activeTab} onTabChange={setActiveTab} />
 
-      <main className="flex-1 container mx-auto px-4 py-6 sm:px-6 lg:px-8">
-        <div className="max-w-5xl mx-auto h-[calc(100vh-16rem)] flex flex-col">
-          <ProcessingIndicator status={processingStatus} />
+      <main className="flex-1 container mx-auto px-4 py-6 sm:px-6 lg:px-8 overflow-hidden">
+        <div className="max-w-5xl mx-auto h-[calc(100vh-12rem)] flex flex-col">
+          {processingStatus.isProcessing && (
+            <ProcessingIndicator status={processingStatus} />
+          )}
           <div className="flex-1 relative">
             {activeTab === "chat" ? (
               <ChatInterface
@@ -169,7 +145,11 @@ function App() {
                 isProcessing={isThinking || processingStatus.isProcessing}
               />
             ) : (
-              <Timeline records={records} />
+              <Timeline
+                records={records}
+                isLoading={isDCALoading}
+                error={dcaError}
+              />
             )}
           </div>
         </div>
