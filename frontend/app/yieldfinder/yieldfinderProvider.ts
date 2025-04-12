@@ -22,11 +22,18 @@ export const TranslationSchema = z.object({
   inputs: z.string(),
 });
 
+export const StopDCASchema = z.object({});
+
 export const OnChainYieldExplanationSchema = z.object({});
 export const BestYieldUSDCSchema = z.object({});
 export const DeployTokenSchema = z.object({
   tokenName: z.string(),
   tokenSymbol: z.string(),
+});
+const StartDCASchema = z.object({
+  amount: z.string(), // "$10", "10 USDT", etc.
+  token: z.string(), // "BTC", "Bitcoin", etc.
+  interval: z.union([z.string(), z.number()]), // "daily", "1 hour", etc.
 });
 export const CrosschainTransferSchema = z.object({
   sourceChain: z.string().describe("Axelar chain ID of the source blockchain"),
@@ -60,9 +67,136 @@ const FeeEstimationSchema = z.object({
   environment: z.enum(["testnet", "mainnet"]).default("testnet"),
 });
 
+function parseIntervalToMs(interval: string | number): number {
+  if (typeof interval === "number") return interval;
+  const normalized = interval.toLowerCase().trim();
+
+  if (normalized.includes("daily") || normalized.includes("day"))
+    return 24 * 60 * 60 * 1000;
+  if (normalized.includes("hour")) return 60 * 60 * 1000;
+  if (normalized.includes("minute")) return 60 * 1000;
+
+  const match = normalized.match(
+    /^(\d+)\s*(ms|s|m|h|d|milliseconds?|seconds?|minutes?|hours?|days?)$/i
+  );
+  if (!match) throw new Error("Invalid interval format");
+  const value = parseInt(match[1], 10);
+  const unit = match[2].toLowerCase();
+
+  switch (unit) {
+    case "ms":
+      return value;
+    case "s":
+    case "second":
+    case "seconds":
+      return value * 1000;
+    case "m":
+    case "minute":
+    case "minutes":
+      return value * 60 * 1000;
+    case "h":
+    case "hour":
+    case "hours":
+      return value * 60 * 60 * 1000;
+    case "d":
+    case "day":
+    case "days":
+      return value * 24 * 60 * 60 * 1000;
+    default:
+      throw new Error("Unsupported time unit");
+  }
+}
+function normalizeTokenName(token: string): string {
+  const lower = token.toLowerCase();
+  if (["btc", "bitcoin"].includes(lower)) return "BTC";
+  if (["eth", "ethereum"].includes(lower)) return "ETH";
+  if (["usdt", "tether"].includes(lower)) return "USDT";
+  // Add more as needed
+  throw new Error(`Unsupported token: ${token}`);
+}
+
+function parseAmount(amount: string): number {
+  const match = amount.match(/^\$?(\d+(\.\d+)?)/);
+  if (!match)
+    throw new Error("Invalid amount format. Use '$10', '10 USDT', etc.");
+  return parseFloat(match[1]);
+}
+
 class HelloWorldActionProvider extends ActionProvider<WalletProvider> {
   constructor() {
     super("hello-world-action-provider", []);
+  }
+  @CreateAction({
+    name: "stop-dca",
+    description: "Stops the currently running DCA strategy",
+    schema: StopDCASchema,
+  })
+  async stopDCA(
+    _wallet: EvmWalletProvider, // unused here
+    _args: z.infer<typeof StopDCASchema>
+  ): Promise<string> {
+    try {
+      const response = await fetch(
+        "https://tari-pyuzwmauh-mxber2022s-projects.vercel.app/dca/stop",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        const errorBody = await response.json();
+        throw new Error(errorBody.message || "Failed to stop DCA");
+      }
+
+      const result = await response.json();
+      return `DCA stopped: ${result.message}`;
+    } catch (error: any) {
+      return `Error stopping DCA: ${error.message}`;
+    }
+  }
+
+  @CreateAction({
+    name: "start-dca",
+    description: "Start a DCA strategy like '$10 into BTC daily'",
+    schema: StartDCASchema,
+  })
+  async startDCAAction(
+    wallet: EvmWalletProvider,
+    args: z.infer<typeof StartDCASchema>
+  ): Promise<string> {
+    try {
+      const amount = parseAmount(args.amount);
+      const token = normalizeTokenName(args.token);
+      const intervalMs = parseIntervalToMs(args.interval);
+
+      if (intervalMs < 60000) {
+        throw new Error("Interval must be at least 1 minute.");
+      }
+
+      const response = await fetch(
+        "https://tari-pyuzwmauh-mxber2022s-projects.vercel.app/dca/start",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ interval: intervalMs, amount, token }),
+        }
+      );
+
+      if (!response.ok) {
+        const errorBody = await response.text();
+        throw new Error(`API Error: ${response.status} - ${errorBody}`);
+      }
+
+      const data = await response.json();
+      return `DCA started: ${data.message}`;
+    } catch (error) {
+      return `Error starting DCA: ${
+        error instanceof Error ? error.message : String(error)
+      }`;
+    }
   }
 
   @CreateAction({
