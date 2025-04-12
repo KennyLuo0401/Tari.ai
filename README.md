@@ -11,9 +11,6 @@ Tari.ai is a sophisticated DCA (Dollar-Cost Averaging) portfolio manager powered
 - 🔒 **Secure**: Built with security-first practices for DeFi operations
 - 📄 **Document Processing**: Integrated Upstage document parsing for automated command extraction from documents
 
-## Custom ERC20 Token
-
-ERC20 Token - 0x87fA90cD9eb770618F78B77fae5bB3d2d889ED63
 ## Tech Stack
 
 ### Frontend
