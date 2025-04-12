@@ -1,157 +1,35 @@
-# Tari.ai - AI-Powered DCA Portfolio Manager
+# **Tari.ai – AI-Powered DCA Investment Platform**
 
-Tari.ai is a sophisticated DCA (Dollar-Cost Averaging) portfolio manager powered by AI, built with Next.js, TypeScript, and AgentKit. It provides real-time portfolio tracking, automated DCA execution, and AI-assisted investment insights.
+Tari.ai is a proof-of-concept platform built during a hackathon to explore how AI and blockchain can work together to automate crypto investing. The system transforms natural language inputs into on-chain actions by combining document understanding, AI coordination, and smart contract execution.
 
-## Features
+## **🔍 How It Works**
 
-- 🤖 **AI-Powered Assistant**: Intelligent chat interface for portfolio management and market analysis
-- 📊 **DCA Timeline**: Real-time tracking of your DCA transactions and schedules
-- 🔄 **Automated Execution**: Reliable automated DCA transactions on Rootstock
-- 💫 **Beautiful UI**: Modern, responsive interface with smooth animations
-- 🔒 **Secure**: Built with security-first practices for DeFi operations
-- 📄 **Document Processing**: Integrated Upstage document parsing for automated command extraction from documents
+**Document Understanding (Upstage API)** Users input financial news or commands. The Upstage API parses the text and extracts sentiment or DCA instructions.
 
-## Tech Stack
+**AI Coordination (RL Swarm-inspired)** Multiple AI agents (simulated using OpenAI APIs) perform collaborative reasoning: answering, critiquing, and resolving investment strategies.
 
-### Frontend
-- Next.js 14
-- TypeScript
-- Tailwind CSS
-- Framer Motion
-- AgentKit
-- Viem
-- Upstage Document Parser API
+**Smart Contract Execution (Rootstock)** The AI consensus is sent to a Solidity smart contract deployed on the Rootstock mainnet. It adjusts and executes a DCA investment based on the input.
 
-### Backend
-- Node.js
-- Express
-- Sushi SDK
-- Viem
-- TypeScript
+**Frontend Interface (Next.js)** A unified UI lets users upload input, view AI reasoning, and execute on-chain transactions. Real-time feedback and error handling are built in.
 
-## Getting Started
+## **💡 Why It Matters**
 
-### Prerequisites
+Simplifies crypto investing through plain-language interaction.
 
-- Node.js 18+
-- Yarn or npm
-- A Rootstock RPC URL
-- A wallet private key for DCA execution
-- Upstage API key for document processing
+Uses multi-agent reasoning for more balanced decisions.
 
-### Installation
+Bridges AI insight directly into decentralized finance.
 
-1. Clone the repository:
-```bash
-git clone https://github.com/yourusername/tari-ai.git
-cd tari-ai
-```
+## **⚙️ Tech Stack**
 
-2. Install dependencies for both frontend and backend:
-```bash
-# Frontend
-npm install
+Next.js, TypeScript, OpenAI API, Upstage Document AI, Gensyn RL Swarm logic, Solidity, Rootstock, Node.js, Express
 
-# Backend
-cd backend
-npm install
-```
+Tip: Try it locally or read more below.
 
-3. Create environment files:
+## **Further Details**
 
-Frontend (.env):
-```env
-NEXT_PUBLIC_BACKEND_URL=http://localhost:5001
-UPSTAGE_API_KEY=your_upstage_api_key
-```
+For full details on architecture, installation, and usage, check the sections below in this README.
 
-Backend (.env):
-```env
-PRIVATE_KEY=your_private_key
-RPC_URL=your_rootstock_rpc_url
-PORT=5001
-AMOUNT_ETH=0.01
-SLIPPAGE=0.005
-```
+Demo: https://youtu.be/5nfZQNRJMfE
 
-4. Start the development servers:
-
-```bash
-# Frontend (in root directory)
-npm run dev
-
-# Backend (in backend directory)
-npm run dev
-```
-
-## Usage
-
-### Setting Up DCA
-
-1. Navigate to the DCA Records tab
-2. Configure your DCA parameters:
-   - Asset selection
-   - Investment amount
-   - Frequency
-3. Start the DCA strategy
-
-### Using the AI Assistant
-
-The AI assistant can help you with:
-- Analyzing market conditions
-- Optimizing DCA strategies
-- Understanding transaction history
-- Getting market insights
-
-Simply type your questions in the chat interface.
-
-### Document Processing
-
-The application supports document parsing through Upstage API integration:
-
-- Upload documents containing DCA instructions
-- Supports various formats (PDF, Images)
-- Automatically extracts and processes commands
-- Handles numbered (1., 2.), lettered (a., b.), and Roman numeral (I., II.) formats
-- Real-time progress tracking of document processing
-
-## API Endpoints
-
-### DCA Management
-
-```typescript
-POST /dca/start
-Body: { interval: number }
-
-POST /dca/stop
-
-GET /dca/status
-Response: {
-  isRunning: boolean,
-  history: Array<{
-    time: string,
-    status: string,
-    txHash?: string,
-    error?: string
-  }>
-}
-```
-
-## Contributing
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Acknowledgments
-
-- Built with [AgentKit](https://github.com/coinbase/agentkit)
-- Powered by [Sushi SDK](https://github.com/sushiswap/sushi-sdk)
-- UI components inspired by [shadcn/ui](https://ui.shadcn.com/)
-- Document processing powered by [Upstage AI](https://upstage.ai)
+GitHub: https://github.com/KennyLuo0401/Tari.ai
