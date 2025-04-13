@@ -1,0 +1,20 @@
+# yaml-language-server: $schema=../schema.json
+tokens:
+  - addressOrDenom: "0x35fF08db0d5Aa7C3964370d247E80beb083C0Ad6"
+    chainName: sepolia
+    collateralAddressOrDenom: "0x2D339821C601809B9F37b56343A1227Cc27Ad489"
+    connections:
+      - token: ethereum|tariai|0xCe613C92E706a241a29669910a233C71feD3DdCE
+    decimals: 18
+    name: MyToken
+    standard: EvmHypXERC20
+    symbol: MTK
+  - addressOrDenom: "0xCe613C92E706a241a29669910a233C71feD3DdCE"
+    chainName: tariai
+    collateralAddressOrDenom: "0x49f91d25152597E3231BBDE37b11bDb5B3a3F5Fa"
+    connections:
+      - token: ethereum|sepolia|0x35fF08db0d5Aa7C3964370d247E80beb083C0Ad6
+    decimals: 18
+    name: MyToken
+    standard: EvmHypXERC20
+    symbol: MTK
