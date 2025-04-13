@@ -1,0 +1,19 @@
+# yaml-language-server: $schema=../schema.json
+blockExplorers:
+  - apiUrl: https://tariai-2744427377380000-1.sagaexplorer.io/
+    family: blockscout
+    name: tariai
+    url: https://tariai-2744427377380000-1.sagaexplorer.io/
+chainId: 2744427377380000
+displayName: Tariai
+domainId: 33333
+isTestnet: true
+name: tariai
+nativeToken:
+  decimals: 18
+  name: tari
+  symbol: tari
+protocol: ethereum
+rpcUrls:
+  - http: https://tariai-2744427377380000-1.jsonrpc.sagarpc.io
+technicalStack: other
